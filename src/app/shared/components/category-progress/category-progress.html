@@ -1,0 +1,12 @@
+<div class="mb-4">
+    <div class="flex justify-start gap-2 items-center">
+        <span class="inline-block w-2 h-2 rounded-full" [class]="colorClass()"></span>
+        <span class="font-bold" [class]="textColorClass()"> {{ category() }}</span>
+        <span class="ml-auto text-right">${{ current().toFixed(2) }} / ${{ max().toFixed(2) }}</span>
+    </div>
+    <div>
+        <div class="w-full h-2 bg-gray-200 rounded-xl overflow-hidden">
+            <div class="h-2 rounded-xl" [class]="colorClass()" [style.width.%]="percentage()"></div>
+        </div>
+    </div>
+</div>

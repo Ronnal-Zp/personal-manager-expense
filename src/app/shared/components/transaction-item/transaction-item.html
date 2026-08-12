@@ -1,0 +1,7 @@
+<div class="flex gap-2 items-center mb-2" [class.border-b-2]="showDivider()" [class.border-b-gray-200]="showDivider()" [class.pb-2]="showDivider()">
+    <div class="inline-block w-2 h-2 rounded-full position-absolute" [class]="colorClass()"></div>
+    <div>
+        <p class="text-black font-bold text-sm">{{ title() }}</p>
+        <p class="text-xs">{{ category() }} · {{ date() }}</p>
+    </div>
+</div>

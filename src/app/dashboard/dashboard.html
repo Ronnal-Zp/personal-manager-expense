@@ -1,0 +1,74 @@
+<div class="flex h-dvh bg-gray-50 overflow-hidden">
+  <!-- Overlay (mobile only, shown when sidebar is open) -->
+  @if (sidebarOpen()) {
+    <div
+      class="fixed inset-0 z-20 bg-black/40 md:hidden"
+      (click)="toggleSidebar()"
+    ></div>
+  }
+
+  <!-- Sidebar -->
+  <aside
+    class="fixed inset-y-0 left-0 z-30 w-64 shrink-0 transform bg-white border-r border-gray-200 transition-transform duration-200 ease-in-out md:static md:translate-x-0"
+    [class.-translate-x-full]="!sidebarOpen()"
+    [class.translate-x-0]="sidebarOpen()"
+  >
+    <div class="flex h-16 items-center gap-2 px-6 border-b border-gray-200">
+      <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-white font-semibold">
+        $
+      </div>
+      <span class="text-lg font-semibold text-gray-900">Mis Finanzas</span>
+    </div>
+
+    <nav class="flex flex-col gap-1 p-4">
+      @for (item of navItems; track item.id) {
+        <button
+          type="button"
+          class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors"
+          [class.bg-indigo-50]="activeSection() === item.id"
+          [class.text-indigo-700]="activeSection() === item.id"
+          [class.text-gray-600]="activeSection() !== item.id"
+          [class.hover:bg-gray-100]="activeSection() !== item.id"
+          (click)="selectSection(item.id)"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="h-5 w-5 shrink-0"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="item.icon" />
+          </svg>
+          {{ item.label }}
+        </button>
+      }
+    </nav>
+  </aside>
+
+  <!-- Main area -->
+  <div class="flex min-w-0 flex-1 flex-col">
+    <!-- Topbar -->
+    <header class="flex h-16 shrink-0 items-center gap-4 border-b border-gray-200 bg-white px-4 md:px-8">
+      <button
+        type="button"
+        class="rounded-lg p-2 text-gray-600 hover:bg-gray-100 md:hidden"
+        (click)="toggleSidebar()"
+        aria-label="Abrir menú"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5" />
+        </svg>
+      </button>
+      <h1 class="text-base font-semibold capitalize text-gray-900">{{ activeSection() }}</h1>
+    </header>
+
+    <!-- Content -->
+    <main class="flex-1 overflow-y-auto p-1 md:p-8">
+      <div class="flex h-full justify-center rounded-xl text-gray-400">
+        <router-outlet></router-outlet>
+      </div>
+    </main>
+  </div>
+</div>
