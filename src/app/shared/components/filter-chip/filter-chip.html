@@ -1,0 +1,12 @@
+
+<div
+    class="font-semibold text-center px-4 py-2 text-sm rounded-3xl"
+    [class.bg-blue-500]="selected()"
+    [class.text-white]="selected()"
+    [class.bg-white]="!selected()"
+    [class.text-black]="!selected()"
+    [class.border]="!selected()"
+    [class.border-gray-500]="!selected()"
+>
+    {{ label() }}
+</div>

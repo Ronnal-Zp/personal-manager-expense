@@ -15,7 +15,7 @@ import { Transaction } from '../../shared/models/transaction';
 })
 export class InitPage {
   transactions: Transaction[] = [
-    { title: 'Uber al trabajo', category: 'Transporte', date: '08 ago', colorClass: 'bg-red-400' },
-    { title: 'Supermercado La Vega', category: 'Comida', date: '08 ago', colorClass: 'bg-orange-400' },
+    { title: 'Uber al trabajo', category: 'Transporte', date: '08 ago', colorClass: 'bg-red-400', amount: 15.00, sumRestSign: '-' },
+    { title: 'Supermercado La Vega', category: 'Comida', date: '08 ago', colorClass: 'bg-orange-400', amount: 50.00, sumRestSign: '+' },
   ];
 }

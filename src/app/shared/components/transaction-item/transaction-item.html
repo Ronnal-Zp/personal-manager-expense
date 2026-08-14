@@ -4,4 +4,12 @@
         <p class="text-black font-bold text-sm">{{ title() }}</p>
         <p class="text-xs">{{ category() }} · {{ date() }}</p>
     </div>
+    <div class="flex-1 text-right">
+        <p class="text-black text-base">
+            {{sumRestSign()=='+'
+                ? ''
+                : '-'}}$ 
+                {{ amount() }}
+        </p>
+    </div>
 </div>

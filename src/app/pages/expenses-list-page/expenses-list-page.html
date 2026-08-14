@@ -1,1 +1,9 @@
-<p>expenses-list-page works!</p>
+
+<div class="flex gap-4 mb-8 w-full">
+    @for (filter of filters; track filter.label) {
+        <app-filter-chip [label]="filter.label" [selected]="filter.label === selectedFilter" />
+    }
+</div>
+
+
+<app-recent-transactions [transactions]="transactions" />

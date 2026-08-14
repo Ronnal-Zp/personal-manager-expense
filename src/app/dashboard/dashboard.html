@@ -29,6 +29,7 @@
           [class.text-indigo-700]="activeSection() === item.id"
           [class.text-gray-600]="activeSection() !== item.id"
           [class.hover:bg-gray-100]="activeSection() !== item.id"
+          [routerLink]="item.path"
           (click)="selectSection(item.id)"
         >
           <svg

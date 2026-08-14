@@ -3,4 +3,6 @@ export interface Transaction {
   category: string;
   date: string;
   colorClass: string;
+  amount: number;
+  sumRestSign: '+' | '-';
 }
