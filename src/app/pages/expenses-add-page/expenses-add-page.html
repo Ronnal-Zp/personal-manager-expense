@@ -1,1 +1,28 @@
-<p>expenses-add-page works!</p>
+<form [formGroup]="formExpense">
+  <div>
+    <label for="amount">Monto</label>
+    <input id="amount" type="number" formControlName="amount" />
+  </div>
+
+  <div>
+    <label for="description">Descripcion</label>
+    <input id="description" type="text" formControlName="description" />
+  </div>
+
+  <div>
+    <label for="date">Fecha (dd/mm/yyyy)</label>
+    <input id="date" type="text" formControlName="date" placeholder="dd/mm/yyyy" />
+    <input
+      id="dateCalendar"
+      type="date"
+      [value]="todayInputDate"
+      (change)="onCalendarDateSelected($event)"
+      aria-label="Seleccionar fecha desde calendario"
+    />
+    @if (formExpense.get('date')?.invalid && formExpense.get('date')?.touched) {
+      <p>La fecha debe tener el formato dd/mm/yyyy</p>
+    }
+  </div>
+</form>
+
+<h1>valor: {{formExpense.get('amount')?.value}}</h1>

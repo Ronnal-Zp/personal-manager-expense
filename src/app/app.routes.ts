@@ -10,6 +10,10 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/expenses-list-page/expenses-list-page').then(m => m.ExpensesListPage)
     },
     {
+        path: 'agregar-gasto',
+        loadComponent: () => import('./pages/expenses-add-page/expenses-add-page').then(m => m.ExpensesAddPage)
+    },
+    {
         path: '**',
         redirectTo: 'inicio',
     }
