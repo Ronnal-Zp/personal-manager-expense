@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 const DATE_PATTERN = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
@@ -8,12 +8,17 @@ const DATE_PATTERN = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
   imports: [ReactiveFormsModule],
   templateUrl: './expenses-add-page.html',
   styleUrl: './expenses-add-page.css',
+  host: { class: 'block w-full' },
 })
 export class ExpensesAddPage implements OnInit {
 
   private formBuilder = inject(FormBuilder);
 
   formExpense!: FormGroup
+
+  categories = ['Comida', 'Transporte', 'Vivienda', 'Entretenimiento', 'Salud', 'Otros'];
+
+  @ViewChild('dateCalendar') dateCalendarInput!: ElementRef<HTMLInputElement>;
 
   private today(): Date {
     return new Date();
@@ -37,6 +42,7 @@ export class ExpensesAddPage implements OnInit {
     this.formExpense = this.formBuilder.group({
       amount: ['0', [Validators.required, Validators.min(1), Validators.max(999)]],
       description: ['', [Validators.required, Validators.maxLength(255)]],
+      category: ['', [Validators.required]],
       date: [this.toDisplayDate(this.today()), [Validators.required, Validators.pattern(DATE_PATTERN)]]
     })
   }
@@ -52,6 +58,23 @@ export class ExpensesAddPage implements OnInit {
     }
     const [year, month, day] = value.split('-');
     this.formExpense.get('date')?.setValue(`${day}/${month}/${year}`);
+  }
+
+  openDatePicker(): void {
+    const input = this.dateCalendarInput.nativeElement;
+    if (typeof input.showPicker === 'function') {
+      input.showPicker();
+    } else {
+      input.click();
+    }
+  }
+
+  onCategorySelected(category: string): void {
+    this.formExpense.get('category')?.setValue(category);
+  }
+
+  onGuardarGasto(): void {
+    console.log(this.formExpense.value);
   }
 
 }
