@@ -15,6 +15,8 @@ export class ExpensesAddPage implements OnInit {
 
   formExpense!: FormGroup
 
+  categories = ['Comida', 'Transporte', 'Vivienda', 'Entretenimiento', 'Salud', 'Otros'];
+
   private today(): Date {
     return new Date();
   }
@@ -37,8 +39,13 @@ export class ExpensesAddPage implements OnInit {
     this.formExpense = this.formBuilder.group({
       amount: ['0', [Validators.required, Validators.min(1), Validators.max(999)]],
       description: ['', [Validators.required, Validators.maxLength(255)]],
+      category: ['', [Validators.required]],
       date: [this.toDisplayDate(this.today()), [Validators.required, Validators.pattern(DATE_PATTERN)]]
     })
+  }
+
+  selectCategory(category: string): void {
+    this.formExpense.get('category')?.setValue(category);
   }
 
   get todayInputDate(): string {
@@ -52,6 +59,10 @@ export class ExpensesAddPage implements OnInit {
     }
     const [year, month, day] = value.split('-');
     this.formExpense.get('date')?.setValue(`${day}/${month}/${year}`);
+  }
+
+  onSubmit(): void {
+    console.log(this.formExpense.value);
   }
 
 }

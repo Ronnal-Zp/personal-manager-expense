@@ -1,28 +1,45 @@
-<form [formGroup]="formExpense">
-  <div>
-    <label for="amount">Monto</label>
-    <input id="amount" type="number" formControlName="amount" />
+<form class="expense-form" [formGroup]="formExpense" (ngSubmit)="onSubmit()">
+  <div class="field">
+    <label for="amount">MONTO</label>
+    <div class="amount-input">
+      <span class="currency">$</span>
+      <input id="amount" type="number" formControlName="amount" placeholder="0.00" />
+    </div>
   </div>
 
-  <div>
-    <label for="description">Descripcion</label>
-    <input id="description" type="text" formControlName="description" />
+  <div class="field">
+    <label for="description">DESCRIPCIÓN</label>
+    <input id="description" type="text" formControlName="description" placeholder="Ej. Supermercado" />
   </div>
 
-  <div>
-    <label for="date">Fecha (dd/mm/yyyy)</label>
-    <input id="date" type="text" formControlName="date" placeholder="dd/mm/yyyy" />
+  <div class="field">
+    <label>CATEGORÍA</label>
+    <div class="category-list">
+      @for (category of categories; track category) {
+        <button
+          type="button"
+          class="category-chip"
+          [class.selected]="formExpense.get('category')?.value === category"
+          (click)="selectCategory(category)"
+        >
+          {{ category }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="dateCalendar">FECHA</label>
     <input
       id="dateCalendar"
       type="date"
       [value]="todayInputDate"
       (change)="onCalendarDateSelected($event)"
-      aria-label="Seleccionar fecha desde calendario"
     />
     @if (formExpense.get('date')?.invalid && formExpense.get('date')?.touched) {
-      <p>La fecha debe tener el formato dd/mm/yyyy</p>
+      <p class="error">La fecha debe tener el formato dd/mm/yyyy</p>
     }
   </div>
-</form>
 
-<h1>valor: {{formExpense.get('amount')?.value}}</h1>
+  <button type="submit" class="save-button">Guardar gasto</button>
+</form>
