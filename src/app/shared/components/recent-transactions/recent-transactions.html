@@ -2,7 +2,7 @@
     @for (transaction of transactions(); track transaction; let last = $last) {
         <app-transaction-item
             [title]="transaction.title"
-            [category]="transaction.category"
+            [category]="transaction.categoryId"
             [date]="transaction.date"
             [amount]="transaction.amount"
             [colorClass]="transaction.colorClass"
