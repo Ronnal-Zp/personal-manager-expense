@@ -16,7 +16,7 @@ import { CategoryEnum } from '../../shared/models';
 })
 export class InitPage {
   transactions: Transaction[] = [
-    { id: 1, title: 'Uber al trabajo', categoryId: CategoryEnum.TRANSPORTE, date: '08 ago', colorClass: 'bg-red-400', amount: 15.00, sumRestSign: '-' },
-    { id: 2, title: 'Supermercado La Vega', categoryId: CategoryEnum.COMIDA, date: '08 ago', colorClass: 'bg-orange-400', amount: 50.00, sumRestSign: '+' },
+    { id: 1, title: 'Uber al trabajo', description: 'Uber al trabajo', categoryId: CategoryEnum.TRANSPORTE, date: '08 ago', colorClass: 'bg-red-400', amount: 15.00, sumRestSign: '-' },
+    { id: 2, title: 'Supermercado La Vega', description: 'Supermercado La Vega', categoryId: CategoryEnum.COMIDA, date: '08 ago', colorClass: 'bg-orange-400', amount: 50.00, sumRestSign: '+' },
   ];
 }

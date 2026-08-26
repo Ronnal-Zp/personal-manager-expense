@@ -26,19 +26,16 @@
   <div class="flex flex-col gap-2">
     <span class="text-xs font-bold uppercase tracking-wide text-gray-500">Categoría</span>
     <div class="flex flex-wrap gap-3">
-      @for (category of categories; track category) {
+      @for (category of categories; track category.id) {
         <button
           type="button"
           (click)="onCategorySelected(category)"
           class="font-semibold text-center px-4 py-2 text-sm rounded-3xl border"
-          [class.bg-blue-500]="formExpense.get('category')?.value === category"
-          [class.text-white]="formExpense.get('category')?.value === category"
-          [class.border-blue-500]="formExpense.get('category')?.value === category"
-          [class.bg-white]="formExpense.get('category')?.value !== category"
-          [class.text-black]="formExpense.get('category')?.value !== category"
-          [class.border-gray-200]="formExpense.get('category')?.value !== category"
+          [class]="formExpense.get('category')?.value === category.id
+            ? category.color + ' text-white border-transparent'
+            : 'bg-white text-black border-gray-200'"
         >
-          {{ category }}
+          {{ category.name }}
         </button>
       }
     </div>

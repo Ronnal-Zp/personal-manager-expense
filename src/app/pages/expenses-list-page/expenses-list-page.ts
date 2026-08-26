@@ -1,9 +1,9 @@
 import { ExpenseService } from './../../shared/services/expense.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { RecentTransactions } from '../../shared/components/recent-transactions/recent-transactions';
 import { FilterChip } from '../../shared/components/filter-chip/filter-chip';
 import { Transaction } from '../../shared/models/transaction';
-import { CategoryEnum } from '../../shared/models';
+import { CATEGORIES } from '../../shared/models';
 
 @Component({
   selector: 'app-expenses-list-page',
@@ -20,7 +20,10 @@ export class ExpensesListPage implements OnInit {
 
   async ngOnInit() {
     const expenses = await this.expenseService.getAll();
-    console.log({expenses})
+    this.transactions.set(expenses.map((expense) => ({
+      ...expense,
+      colorClass: CATEGORIES.find((category) => category.name === expense.categoryId)?.color ?? 'bg-gray-500',
+    })));
   }
 
   filters = [
@@ -31,9 +34,6 @@ export class ExpensesListPage implements OnInit {
 
   selectedFilter = 'Todas';
 
-  transactions: Transaction[] = [
-    { id: 1, title: 'Uber al trabajo', categoryId: CategoryEnum.TRANSPORTE, date: '08 ago', colorClass: 'bg-red-400', amount: 15.00, sumRestSign: '-' },
-    { id: 2, title: 'Supermercado La Vega', categoryId: CategoryEnum.COMIDA, date: '08 ago', colorClass: 'bg-orange-400', amount: 50.00, sumRestSign: '+' },
-  ];
+  transactions = signal<Transaction[]>([]);
 
 }

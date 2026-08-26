@@ -1,6 +1,6 @@
 import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CategoryEnum } from '../../shared/models/categoryExpense';
+import { CATEGORIES, CategoryExpense } from '../../shared/models/categoryExpense';
 import { ExpenseService } from '../../shared/services/expense.service';
 import { Transaction } from '../../shared/models';
 
@@ -17,7 +17,7 @@ export class ExpensesAddPage implements OnInit {
 
   private formBuilder = inject(FormBuilder);
   formExpense!: FormGroup
-  categories = Object.values(CategoryEnum);
+  categories = CATEGORIES;
   @ViewChild('dateCalendar') dateCalendarInput!: ElementRef<HTMLInputElement>;
 
   constructor(
@@ -73,18 +73,22 @@ export class ExpensesAddPage implements OnInit {
     }
   }
 
-  onCategorySelected(category: CategoryEnum): void {
-    this.formExpense.get('category')?.setValue(category);
+  onCategorySelected(category: CategoryExpense): void {
+    this.formExpense.get('category')?.setValue(category.id);
   }
 
-  onGuardarGasto(): void {
+  async onGuardarGasto(): Promise<void> {
     const payload: Transaction = {
       ...this.formExpense.value,
       id: Date.now(),
       categoryId: this.formExpense.get('category')?.value
     }
-    this.expenseService.add(payload)
-    this.formExpense.reset()
+    try {
+      await this.expenseService.add(payload)
+      this.formExpense.reset()
+    } catch (error) {
+      console.error('Error al guardar el gasto', error)
+    }
   }
 
 }

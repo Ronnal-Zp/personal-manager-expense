@@ -4,7 +4,7 @@ export interface Transaction {
   id?: number;
   title: string;
   categoryId: CategoryEnum;
-  description?: string;
+  description: string;
   date: string;
   colorClass?: string;
   amount: number;
