@@ -1,5 +1,8 @@
 import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CategoryEnum } from '../../shared/models/categoryExpense';
+import { ExpenseService } from '../../shared/services/expense.service';
+import { Transaction } from '../../shared/models';
 
 const DATE_PATTERN = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
 
@@ -13,12 +16,13 @@ const DATE_PATTERN = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
 export class ExpensesAddPage implements OnInit {
 
   private formBuilder = inject(FormBuilder);
-
   formExpense!: FormGroup
-
-  categories = ['Comida', 'Transporte', 'Vivienda', 'Entretenimiento', 'Salud', 'Otros'];
-
+  categories = Object.values(CategoryEnum);
   @ViewChild('dateCalendar') dateCalendarInput!: ElementRef<HTMLInputElement>;
+
+  constructor(
+    private readonly expenseService: ExpenseService
+  ){}
 
   private today(): Date {
     return new Date();
@@ -69,12 +73,18 @@ export class ExpensesAddPage implements OnInit {
     }
   }
 
-  onCategorySelected(category: string): void {
+  onCategorySelected(category: CategoryEnum): void {
     this.formExpense.get('category')?.setValue(category);
   }
 
   onGuardarGasto(): void {
-    console.log(this.formExpense.value);
+    const payload: Transaction = {
+      ...this.formExpense.value,
+      id: Date.now(),
+      categoryId: this.formExpense.get('category')?.value
+    }
+    this.expenseService.add(payload)
+    this.formExpense.reset()
   }
 
 }

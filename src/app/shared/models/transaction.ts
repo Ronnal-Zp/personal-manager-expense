@@ -1,12 +1,12 @@
 import { CategoryEnum } from "./categoryExpense";
 
 export interface Transaction {
-  id: number;
+  id?: number;
   title: string;
   categoryId: CategoryEnum;
   description?: string;
   date: string;
-  colorClass: string;
+  colorClass?: string;
   amount: number;
   sumRestSign: '+' | '-';
 }

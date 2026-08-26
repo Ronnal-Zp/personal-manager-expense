@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { ExpenseService } from './../../shared/services/expense.service';
+import { Component, OnInit } from '@angular/core';
 import { RecentTransactions } from '../../shared/components/recent-transactions/recent-transactions';
 import { FilterChip } from '../../shared/components/filter-chip/filter-chip';
 import { Transaction } from '../../shared/models/transaction';
@@ -11,7 +12,16 @@ import { CategoryEnum } from '../../shared/models';
   styleUrl: './expenses-list-page.css',
   host: { class: 'w-full'}
 })
-export class ExpensesListPage {
+export class ExpensesListPage implements OnInit {
+
+  constructor(
+    private readonly expenseService: ExpenseService
+  ) {}
+
+  async ngOnInit() {
+    const expenses = await this.expenseService.getAll();
+    console.log({expenses})
+  }
 
   filters = [
     { label: 'Todas' },

@@ -5,7 +5,7 @@
             [category]="transaction.categoryId"
             [date]="transaction.date"
             [amount]="transaction.amount"
-            [colorClass]="transaction.colorClass"
+            [colorClass]="transaction.colorClass ?? 'bg-gray-500'"
             [sumRestSign]="transaction.sumRestSign"
             [showDivider]="!last"
         />

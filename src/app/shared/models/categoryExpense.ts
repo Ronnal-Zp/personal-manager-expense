@@ -1,6 +1,6 @@
 export interface CategoryExpense {
   id: string;
-  name: string;
+  name: CategoryEnum;
   color: string;
   icon?: string;
   budgetLimit?: number;
