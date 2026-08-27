@@ -1,10 +1,11 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { SummaryCard } from '../../shared/components/summary-card/summary-card';
 import { CategoryProgress } from '../../shared/components/category-progress/category-progress';
 import { RecentTransactions } from '../../shared/components/recent-transactions/recent-transactions';
 import { Transaction } from '../../shared/models/transaction';
-import { CategoryEnum } from '../../shared/models';
+import { CategoryEnum, CategoryExpenseTotal } from '../../shared/models';
 import { BudgetService } from '../../shared/services/budget.service';
+import { ExpenseService } from '../../shared/services/expense.service';
 
 @Component({
   selector: 'app-init-page',
@@ -15,12 +16,21 @@ import { BudgetService } from '../../shared/services/budget.service';
     class: 'w-full'
   }
 })
-export class InitPage {
+export class InitPage implements OnInit {
   private readonly budgetService = inject(BudgetService);
   protected readonly formattedBudget = computed(() => `$${this.budgetService.monthlyBudget().toFixed(2)}`);
+  public transactions = signal<Transaction[]>([]);
+  public totalByCategory: CategoryExpenseTotal[] = [];
 
-  transactions: Transaction[] = [
-    { id: 1, title: 'Uber al trabajo', description: 'Uber al trabajo', categoryId: CategoryEnum.TRANSPORTE, date: '08 ago', colorClass: 'bg-red-400', amount: 15.00, sumRestSign: '-' },
-    { id: 2, title: 'Supermercado La Vega', description: 'Supermercado La Vega', categoryId: CategoryEnum.COMIDA, date: '08 ago', colorClass: 'bg-orange-400', amount: 50.00, sumRestSign: '+' },
-  ];
+  constructor(
+    private readonly expenseService: ExpenseService
+  ){}
+
+  async ngOnInit() {
+    this.totalByCategory = await this.expenseService.getTotalByCategory();
+    this.transactions.set( await this.expenseService.getAll() )
+
+
+  }
+
 }

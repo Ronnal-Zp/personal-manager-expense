@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { CATEGORIES, CategoryExpense } from '../../shared/models/categoryExpense';
 import { ExpenseService } from '../../shared/services/expense.service';
 import { Transaction } from '../../shared/models';
+import Swal from 'sweetalert2'
 
 const DATE_PATTERN = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
 
@@ -86,7 +87,20 @@ export class ExpensesAddPage implements OnInit {
     try {
       await this.expenseService.add(payload)
       this.formExpense.reset()
-    } catch (error) {
+
+      Swal.fire({
+        title: '¡Operación exitosa!',
+        text: 'El registro ha sido guardado correctamente.',
+        icon: 'success',
+        confirmButtonText: 'Aceptar'
+      });
+    } catch (error: any) {
+      Swal.fire({
+        title: '¡Ha ocurrido un error!',
+        text: error.message,
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      });
       console.error('Error al guardar el gasto', error)
     }
   }
