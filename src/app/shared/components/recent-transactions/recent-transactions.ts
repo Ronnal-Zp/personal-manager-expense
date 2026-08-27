@@ -10,6 +10,7 @@ import { Transaction } from '../../models/transaction';
 })
 export class RecentTransactions {
   transactions = input.required<Transaction[]>();
+  emptyMessage = input('');
 
   constructor() {
     effect(() => console.log('this.transactions', this.transactions()));

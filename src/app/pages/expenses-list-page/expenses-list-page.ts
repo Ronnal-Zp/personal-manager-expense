@@ -1,5 +1,5 @@
 import { ExpenseService } from './../../shared/services/expense.service';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { RecentTransactions } from '../../shared/components/recent-transactions/recent-transactions';
 import { FilterChip } from '../../shared/components/filter-chip/filter-chip';
 import { Transaction } from '../../shared/models/transaction';
@@ -14,25 +14,53 @@ import { CATEGORIES } from '../../shared/models';
 })
 export class ExpensesListPage implements OnInit {
 
-  constructor(
-    private readonly expenseService: ExpenseService
-  ) {}
-
-  async ngOnInit() {
-    const expenses = await this.expenseService.getAll();
-    this.transactions.set(expenses.map((expense) => ({
-      ...expense,
-      colorClass: CATEGORIES.find((category) => category.name === expense.categoryId)?.color ?? 'bg-gray-500',
-    })));
-  }
+  private readonly expenseService = inject(ExpenseService);
 
   filters = [
     { label: 'Todas' },
     ...CATEGORIES.map((category) => ({ label: category.name })),
   ];
 
-  selectedFilter = 'Todas';
-
+  selectedFilter = signal('Todas');
   transactions = signal<Transaction[]>([]);
+
+  filteredTransactions = computed(() => {
+    const filter = this.selectedFilter();
+    const all = this.transactions();
+
+    if (filter === 'Todas') {
+      return all;
+    }
+
+    const category = CATEGORIES.find((item) => item.name === filter);
+    if (!category) {
+      return all;
+    }
+
+    return all.filter(
+      (transaction) =>
+        transaction.categoryId === category.id ||
+        transaction.categoryId === category.name,
+    );
+  });
+
+  async ngOnInit() {
+    const expenses = await this.expenseService.getAll();
+    this.transactions.set(expenses.map((expense) => ({
+      ...expense,
+      colorClass: this.resolveCategoryColor(expense.categoryId),
+    })));
+  }
+
+  selectFilter(label: string): void {
+    this.selectedFilter.set(label);
+  }
+
+  private resolveCategoryColor(categoryId: string): string {
+    const category = CATEGORIES.find(
+      (item) => item.id === categoryId || item.name === categoryId,
+    );
+    return category?.color ?? 'bg-gray-500';
+  }
 
 }
