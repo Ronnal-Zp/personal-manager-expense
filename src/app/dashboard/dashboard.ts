@@ -1,5 +1,6 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { BudgetService } from '../shared/services/budget.service';
 
 interface NavItem {
   id: 'inicio' | 'gastos' | 'agregar' | 'reportes';
@@ -14,6 +15,7 @@ interface NavItem {
   imports: [RouterModule],
 })
 export class Dashboard {
+  protected readonly budgetService = inject(BudgetService);
   protected readonly sidebarOpen = signal(false);
   protected readonly activeSection = signal<NavItem['id']>('inicio');
 
@@ -51,5 +53,12 @@ export class Dashboard {
 
   protected toggleSidebar(): void {
     this.sidebarOpen.update((open) => !open);
+  }
+
+  protected onBudgetChange(event: Event): void {
+    const value = Number((event.target as HTMLInputElement).value);
+    if (Number.isFinite(value)) {
+      this.budgetService.setMonthlyBudget(value);
+    }
   }
 }

@@ -1,7 +1,7 @@
 <div class="grid grid-cols-3 gap-2 w-full mb-6">
     <app-summary-card label="Gastado del mes" amount="$1135.491" />
 
-    <app-summary-card label="Presupuesto total" amount="$1820.00" />
+    <app-summary-card label="Presupuesto total" [amount]="formattedBudget()" />
 
     <app-summary-card label="Disponible" amount="$684.51" />
 </div>

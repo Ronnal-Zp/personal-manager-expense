@@ -28,8 +28,7 @@ export class ExpensesListPage implements OnInit {
 
   filters = [
     { label: 'Todas' },
-    { label: 'Comida' },
-    { label: 'Transporte' },
+    ...CATEGORIES.map((category) => ({ label: category.name })),
   ];
 
   selectedFilter = 'Todas';
