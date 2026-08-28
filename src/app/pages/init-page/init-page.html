@@ -1,20 +1,23 @@
 <div class="grid grid-cols-3 gap-2 w-full mb-6">
-    <app-summary-card label="Gastado del mes" amount="$1135.491" />
+    <app-summary-card label="Gastado del mes" [amount]=`$${totalExpense}` />
 
     <app-summary-card label="Presupuesto total" [amount]="formattedBudget()" />
 
-    <app-summary-card label="Disponible" amount="$684.51" />
+    <app-summary-card label="Disponible" [amount]="`$${available}`" />
 </div>
 
 <h3 class="mb-2 font-bold text-black">Presupuesto por categoría</h3>
 
-<app-category-progress category="Comida" colorClass="bg-red-400" textColorClass="text-red-400" [current]="108.10" [max]="400.00" />
-<app-category-progress category="Transporte" colorClass="bg-blue-400" textColorClass="text-blue-400" [current]="108.10" [max]="400.00" />
-<app-category-progress category="Vivienda" colorClass="bg-green-700" textColorClass="text-green-700" [current]="108.10" [max]="400.00" />
-<app-category-progress category="Entretenimiento" colorClass="bg-purple-800" textColorClass="text-purple-800" [current]="108.10" [max]="400.00" />
-<app-category-progress category="Salud" colorClass="bg-yellow-400" textColorClass="text-yellow-400" [current]="108.10" [max]="400.00" />
-<app-category-progress category="Otros" colorClass="bg-orange-400" textColorClass="text-orange-400" [current]="108.10" [max]="400.00" />
-
+@for (category of categories(); track $index) {
+  <app-category-progress
+    [category]="category.name"
+    [colorClass]="category.color",
+    [textColorClass]="category.textColor"
+    [current]="getCurrentExpensesByCategory(category.id)"
+    [max]="category.budgetLimit ?? 0"
+  >
+  </app-category-progress>
+}
 
 <h3 class="mb-2 font-bold text-black">Transacciones recientes</h3>
 

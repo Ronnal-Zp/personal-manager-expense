@@ -38,9 +38,7 @@ export class ExpensesListPage implements OnInit {
     }
 
     return all.filter(
-      (transaction) =>
-        transaction.categoryId === category.id ||
-        transaction.categoryId === category.name,
+      (transaction) => transaction.categoryId === category.id,
     );
   });
 
@@ -56,10 +54,8 @@ export class ExpensesListPage implements OnInit {
     this.selectedFilter.set(label);
   }
 
-  private resolveCategoryColor(categoryId: string): string {
-    const category = CATEGORIES.find(
-      (item) => item.id === categoryId || item.name === categoryId,
-    );
+  private resolveCategoryColor(categoryId: number): string {
+    const category = CATEGORIES.find((item) => item.id === categoryId);
     return category?.color ?? 'bg-gray-500';
   }
 

@@ -15,7 +15,7 @@ export class ExpenseService {
 
     async getTotalByCategory(): Promise<CategoryExpenseTotal[]> {
       const transactions = await this.getAll();
-      const totals = new Map<string, number>();
+      const totals = new Map<number, number>();
 
       for (const transaction of transactions) {
           const current = totals.get(transaction.categoryId) ?? 0;
