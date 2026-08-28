@@ -10,7 +10,7 @@ import { CategoryProgress } from '../../shared/components/category-progress/cate
   templateUrl: './report-expense-page.html',
   styleUrl: './report-expense-page.css',
   host: {
-    'class': 'w-full'
+    'class': 'w-full px-4'
   }
 })
 export class ReportExpensePage implements AfterViewInit, OnDestroy {
