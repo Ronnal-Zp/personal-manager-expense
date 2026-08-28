@@ -19,6 +19,7 @@ import Swal from 'sweetalert2';
 })
 export class InitPage implements OnInit {
   private readonly budgetService = inject(BudgetService);
+  private readonly expenseService = inject(ExpenseService);
   public readonly formattedBudget = computed(() => `$${this.budgetService.monthlyBudget().toFixed(2)}`);
   public transactions = signal<Transaction[]>([]);
   public totalByCategory = signal<CategoryExpenseTotal[]>([]);
@@ -26,9 +27,6 @@ export class InitPage implements OnInit {
   public totalExpense = 0;
   public available = 0;
 
-  constructor(
-    private readonly expenseService: ExpenseService
-  ){}
 
   async ngOnInit() {
     try {
