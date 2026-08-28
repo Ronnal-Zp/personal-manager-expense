@@ -38,7 +38,7 @@ export class ExpensesListPage implements OnInit {
     }
 
     return all.filter(
-      (transaction) => transaction.categoryId === category.id,
+      (transaction) => transaction.categoryId == category.id,
     );
   });
 
