@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, effect, input } from '@angular/core';
 import { TransactionItem } from '../transaction-item/transaction-item';
 import { Transaction } from '../../models/transaction';
 
@@ -10,4 +10,9 @@ import { Transaction } from '../../models/transaction';
 })
 export class RecentTransactions {
   transactions = input.required<Transaction[]>();
+  emptyMessage = input('');
+
+  constructor() {
+    effect(() => console.log('this.transactions', this.transactions()));
+  }
 }

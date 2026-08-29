@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 
 @Component({
   selector: 'app-filter-chip',
@@ -9,4 +9,5 @@ import { Component, input } from '@angular/core';
 export class FilterChip {
   label = input.required<string>();
   selected = input(false);
+  filterSelect = output<void>();
 }

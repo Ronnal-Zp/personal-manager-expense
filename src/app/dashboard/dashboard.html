@@ -13,7 +13,7 @@
     [class.-translate-x-full]="!sidebarOpen()"
     [class.translate-x-0]="sidebarOpen()"
   >
-    <div class="flex h-16 items-center gap-2 px-6 border-b border-gray-200">
+    <div class="flex h-20 items-center gap-2 px-6 border-b border-gray-200">
       <div class="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-600 text-white font-semibold">
         $
       </div>
@@ -46,12 +46,29 @@
         </button>
       }
     </nav>
+
+    <div class="absolute bottom-0 w-full">
+      <div class="p-3 bg-gray-200 rounded-2xl mx-auto w-50 mb-7 font-mono">
+          <p class="text-sm">Presupuesto mensual</p>
+          <div class="flex items-center gap-1 font-bold">
+            <span>$</span>
+            <input
+              type="number"
+              class="w-full bg-transparent outline-none"
+              [value]="budgetService.monthlyBudget()"
+              (change)="onBudgetChange($event)"
+              min="0"
+              step="0.01"
+            />
+          </div>
+      </div>
+    </div>
   </aside>
 
   <!-- Main area -->
   <div class="flex min-w-0 flex-1 flex-col">
     <!-- Topbar -->
-    <header class="flex h-16 shrink-0 items-center gap-4 border-b border-gray-200 bg-white px-4 md:px-8">
+    <header class="flex h-20 shrink-0 items-center gap-4 border-b border-gray-200 bg-white px-4 md:px-8">
       <button
         type="button"
         class="rounded-lg p-2 text-gray-600 hover:bg-gray-100 md:hidden"
@@ -62,7 +79,10 @@
           <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5" />
         </svg>
       </button>
-      <h1 class="text-base font-semibold capitalize text-gray-900">{{ activeSection() }}</h1>
+      <div>
+        <h1 class="text-2xl font-semibold capitalize text-gray-900">{{ activeSection() }}</h1>
+        <p> {{ descriptionSection() }} </p>
+      </div>
     </header>
 
     <!-- Content -->

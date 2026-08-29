@@ -1,45 +1,77 @@
-<form class="expense-form" [formGroup]="formExpense" (ngSubmit)="onSubmit()">
-  <div class="field">
-    <label for="amount">MONTO</label>
-    <div class="amount-input">
-      <span class="currency">$</span>
-      <input id="amount" type="number" formControlName="amount" placeholder="0.00" />
+<form [formGroup]="formExpense" class="flex flex-col gap-6 w-full max-w-md p-4">
+  <div class="flex flex-col gap-2">
+    <label for="amount" class="text-xs font-bold uppercase tracking-wide text-gray-500">Monto</label>
+    <div class="flex items-center gap-2 rounded-2xl border border-gray-200 px-4 py-3">
+      <span class="text-2xl text-gray-400">$</span>
+      <input
+        id="amount"
+        type="number"
+        formControlName="amount"
+        class="w-full text-2xl font-semibold text-gray-400 outline-none"
+      />
     </div>
   </div>
 
-  <div class="field">
-    <label for="description">DESCRIPCIÓN</label>
-    <input id="description" type="text" formControlName="description" placeholder="Ej. Supermercado" />
+  <div class="flex flex-col gap-2">
+    <label for="description" class="text-xs font-bold uppercase tracking-wide text-gray-500">Descripción</label>
+    <input
+      id="description"
+      type="text"
+      formControlName="description"
+      placeholder="Ej. Supermercado"
+      class="rounded-2xl border border-gray-200 px-4 py-3 outline-none placeholder:text-gray-300"
+    />
   </div>
 
-  <div class="field">
-    <label>CATEGORÍA</label>
-    <div class="category-list">
-      @for (category of categories; track category) {
+  <div class="flex flex-col gap-2">
+    <span class="text-xs font-bold uppercase tracking-wide text-gray-500">Categoría</span>
+    <div class="flex flex-wrap gap-3">
+      @for (category of categories; track category.id) {
         <button
           type="button"
-          class="category-chip"
-          [class.selected]="formExpense.get('category')?.value === category"
-          (click)="selectCategory(category)"
+          (click)="onCategorySelected(category)"
+          class="font-semibold text-center px-4 py-2 text-sm rounded-3xl border"
+          [class]="formExpense.get('category')?.value === category.id
+            ? category.color + ' text-white border-transparent'
+            : 'bg-white text-black border-gray-200'"
         >
-          {{ category }}
+          {{ category.name }}
         </button>
       }
     </div>
   </div>
 
-  <div class="field">
-    <label for="dateCalendar">FECHA</label>
-    <input
-      id="dateCalendar"
-      type="date"
-      [value]="todayInputDate"
-      (change)="onCalendarDateSelected($event)"
-    />
+  <div class="flex flex-col gap-2">
+    <label for="date" class="text-xs font-bold uppercase tracking-wide text-gray-500">Fecha</label>
+    <div class="relative rounded-2xl border border-gray-200 px-4 py-3">
+      <input
+        id="date"
+        type="text"
+        formControlName="date"
+        placeholder="dd/mm/yyyy"
+        (click)="openDatePicker()"
+        class="w-full outline-none pr-8"
+      />
+      <input
+        #dateCalendar
+        id="dateCalendar"
+        type="date"
+        [value]="todayInputDate"
+        (change)="onCalendarDateSelected($event)"
+        aria-label="Seleccionar fecha desde calendario"
+        class="absolute inset-0 opacity-0 pointer-events-none"
+      />
+    </div>
     @if (formExpense.get('date')?.invalid && formExpense.get('date')?.touched) {
-      <p class="error">La fecha debe tener el formato dd/mm/yyyy</p>
+      <p class="text-red-500 text-sm">La fecha debe tener el formato dd/mm/yyyy</p>
     }
   </div>
 
-  <button type="submit" class="save-button">Guardar gasto</button>
+  <button
+    type="button"
+    (click)="onGuardarGasto()"
+    class="bg-blue-600 text-white font-semibold rounded-2xl py-4 w-full"
+  >
+    Guardar gasto
+  </button>
 </form>

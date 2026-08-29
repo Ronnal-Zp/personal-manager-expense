@@ -1,1 +1,20 @@
-<p>report-expense-page works!</p>
+<div class="w-full p-4">
+  <h2 class="text-lg font-semibold mb-4">Gastos por categoría (mes actual)</h2>
+  <div class="relative w-full h-96">
+    <canvas #chartCanvas></canvas>
+  </div>
+</div>
+
+<div class="mb-20"></div>
+<h2 class="mb-5 text-xl text-black font-bold">Distribucion por categoria</h2>
+
+@for (category of categories(); track $index) {
+  <app-category-progress
+    [category]="category.name"
+    [colorClass]="category.color",
+    [textColorClass]="category.textColor"
+    [current]="getCurrentExpensesByCategory(category.id)"
+    [max]="category.budgetLimit ?? 0"
+  >
+  </app-category-progress>
+}
