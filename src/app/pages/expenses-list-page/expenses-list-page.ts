@@ -1,9 +1,16 @@
 import { ExpenseService } from './../../shared/services/expense.service';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { catchError, of, Subject, switchMap } from 'rxjs';
 import { RecentTransactions } from '../../shared/components/recent-transactions/recent-transactions';
 import { FilterChip } from '../../shared/components/filter-chip/filter-chip';
-import { Transaction } from '../../shared/models/transaction';
-import { CATEGORIES } from '../../shared/models';
+import { ExpenseItemResponse } from '../../shared/models/expense/ExpenseResponse';
+import { CategoryService } from '../../shared/services/category.service';
+import { CategoryResponseI } from '../../shared/models/category/CategoryResponse';
+import { PageQuery } from '../../shared/models/PageQuery';
+
+const ALL_FILTER_ID = 0;
+const PAGE_QUERY: PageQuery = { page: 1, limit: 255 };
 
 @Component({
   selector: 'app-expenses-list-page',
@@ -15,48 +22,63 @@ import { CATEGORIES } from '../../shared/models';
 export class ExpensesListPage implements OnInit {
 
   private readonly expenseService = inject(ExpenseService);
+  private readonly categoryService = inject(CategoryService);
 
-  filters = [
-    { label: 'Todas' },
-    ...CATEGORIES.map((category) => ({ label: category.name })),
-  ];
+  private readonly categorySelected = new Subject<number>();
 
-  selectedFilter = signal('Todas');
-  transactions = signal<Transaction[]>([]);
+  readonly allFilterId = ALL_FILTER_ID;
 
-  filteredTransactions = computed(() => {
-    const filter = this.selectedFilter();
-    const all = this.transactions();
+  filters = signal<CategoryResponseI[]>([]);
+  selectedFilterId = signal(ALL_FILTER_ID);
+  expenses = signal<ExpenseItemResponse[]>([]);
+  loading = signal(false);
 
-    if (filter === 'Todas') {
-      return all;
-    }
+  constructor() {
+    this.categorySelected
+      .pipe(
+        switchMap((categoryId) => {
+          const request$ = categoryId === ALL_FILTER_ID
+            ? this.expenseService.getAll(PAGE_QUERY)
+            : this.expenseService.getAllByCategory(categoryId, PAGE_QUERY);
 
-    const category = CATEGORIES.find((item) => item.name === filter);
-    if (!category) {
-      return all;
-    }
+          return request$.pipe(
+            catchError((err) => {
+              console.log(err);
+              return of<ExpenseItemResponse[]>([]);
+            }),
+          );
+        }),
+        takeUntilDestroyed(),
+      )
+      .subscribe((response) => {
+        const data = Array.isArray(response) ? response : response.data;
 
-    return all.filter(
-      (transaction) => transaction.categoryId == category.id,
-    );
-  });
-
-  async ngOnInit() {
-    const expenses = await this.expenseService.getAll();
-    this.transactions.set(expenses.map((expense) => ({
-      ...expense,
-      colorClass: this.resolveCategoryColor(expense.categoryId),
-    })));
+        this.expenses.set(
+          data.map(i => ({ ...i, date: i.date.toString().split('T')[0]}))
+        );
+        this.loading.set(false);
+      });
   }
 
-  selectFilter(label: string): void {
-    this.selectedFilter.set(label);
+  ngOnInit() {
+
+    this.selectFilter(ALL_FILTER_ID);
+
+    this.categoryService.getAll().subscribe({
+      next: (response) => {
+        this.filters.set(response.data);
+      },
+      error: (err) => {
+        console.log(err)
+      }
+    })
+
   }
 
-  private resolveCategoryColor(categoryId: number): string {
-    const category = CATEGORIES.find((item) => item.id === categoryId);
-    return category?.color ?? 'bg-gray-500';
+  selectFilter(categoryId: number): void {
+    this.selectedFilterId.set(categoryId);
+    this.loading.set(true);
+    this.categorySelected.next(categoryId);
   }
 
 }

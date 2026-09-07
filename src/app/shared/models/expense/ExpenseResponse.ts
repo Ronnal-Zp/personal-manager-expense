@@ -18,3 +18,15 @@ export interface CategoryResponse {
     color:        string;
     user_owner:   number;
 }
+
+export interface ExpenseItemResponse {
+    amount:        number;
+    category:      CategoryResponse;
+    date:          Date | string;
+    description:   string;
+    id:            number;
+    sum_rest_sign: string;
+    title:         string;
+    user_owner:    number;
+}
+

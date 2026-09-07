@@ -23,7 +23,7 @@ export class ReportExpensePage implements AfterViewInit, OnDestroy {
 
   async ngAfterViewInit() {
     this.totalByCategory.set( await this.expenseService.getTotalByCategory() );
-    this.transactions.set( await this.expenseService.getAll() );
+    // this.transactions.set( await this.expenseService.getAll() );
 
     const now = new Date();
     const year = now.getFullYear();

@@ -5,8 +5,9 @@ import { CategoryExpenseTotal } from '../models/categoryExpense';
 import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { ExpenseCreateRequest } from '../models/expense/ExpenseRequest';
-import { ExpenseCreateResponse } from '../models/expense/ExpenseResponse';
-import { Observable } from 'rxjs';
+import { ExpenseCreateResponse, ExpenseItemResponse } from '../models/expense/ExpenseResponse';
+import { ResponseListI } from '../models/ResponseApi';
+import { PageQuery } from '../models/PageQuery';
 
 @Injectable({providedIn: 'root'})
 export class ExpenseService {
@@ -14,21 +15,28 @@ export class ExpenseService {
     http = inject(HttpClient);
     BASE_URL = environment.BASE_URL
     
-    async getAll(): Promise<Transaction[]> {
-        const db = await getDb();
-        return db.getAll('expenses');
+    getAll(pageQuery: PageQuery) {
+        return this.http.get<ResponseListI<ExpenseItemResponse>>(`${this.BASE_URL}/expense`, {
+            params: { ...pageQuery }
+        });
+    }
+
+    getAllByCategory(category_id: number, pageQuery: PageQuery) {
+        return this.http.get<ResponseListI<ExpenseItemResponse>>(`${this.BASE_URL}/expense/category/${category_id}`, {
+            params: { ...pageQuery }
+        });
     }
 
     async getTotalByCategory(): Promise<CategoryExpenseTotal[]> {
-      const transactions = await this.getAll();
-      const totals = new Map<number, number>();
+    //   const transactions = await this.getAll();
+    //   const totals = new Map<number, number>();
 
-      for (const transaction of transactions) {
-          const current = totals.get(transaction.categoryId) ?? 0;
-          totals.set(transaction.categoryId, current + transaction.amount);
-      }
+    //   for (const transaction of transactions) {
+    //       const current = totals.get(transaction.categoryId) ?? 0;
+    //       totals.set(transaction.categoryId, current + transaction.amount);
+    //   }
 
-      return Array.from(totals, ([categoryId, total]) => ({ categoryId, total })) as CategoryExpenseTotal[];
+      return Promise.resolve([])
     }
 
     add(expense: ExpenseCreateRequest) {
