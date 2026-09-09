@@ -30,3 +30,10 @@ export interface ExpenseItemResponse {
     user_owner:    number;
 }
 
+
+export interface TotalExpenseByCategory {
+    budgetLimit:  number;
+    categoryId:   number;
+    categoryName: string;
+    total:        number;
+}
