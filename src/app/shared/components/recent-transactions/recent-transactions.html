@@ -5,10 +5,9 @@
         @for (transaction of transactions(); track transaction; let last = $last) {
             <app-transaction-item
                 [description]="transaction.description"
-                [categoryId]="transaction.category.id"
+                [category]="transaction.category"
                 [date]="transaction.date"
                 [amount]="transaction.amount"
-                [colorClass]="transaction.category.color"
                 [sumRestSign]="transaction.sum_rest_sign"
                 [showDivider]="!last"
             />
