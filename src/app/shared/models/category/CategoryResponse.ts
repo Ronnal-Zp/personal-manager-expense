@@ -1,9 +1,9 @@
 export interface CategoryResponseI {
     budget_Limit: number;
-    color:        null;
-    icon:         null;
+    color:        string | null;
+    icon:         string | null;
     id:           number;
     name:         string;
-    text_color:   null;
+    text_color:   string | null;
     user_owner:   number;
 }

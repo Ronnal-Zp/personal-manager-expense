@@ -11,10 +11,10 @@
 @for (category of categories(); track $index) {
   <app-category-progress
     [category]="category.name"
-    [colorClass]="category.color",
-    [textColorClass]="category.textColor"
+    [colorClass]="category.color ?? ''"
+    [textColorClass]="category.text_color ?? ''"
     [current]="getCurrentExpensesByCategory(category.id)"
-    [max]="category.budgetLimit ?? 0"
+    [max]="category.budget_Limit ?? 0"
   >
   </app-category-progress>
 }
