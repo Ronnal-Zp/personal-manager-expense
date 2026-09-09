@@ -1,5 +1,4 @@
-import { Component, computed, effect, input } from '@angular/core';
-import { CATEGORIES } from '../../models/categoryExpense';
+import { Component, computed, input } from '@angular/core';
 import { CategoryResponse } from '../../models/expense/ExpenseResponse';
 
 

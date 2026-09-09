@@ -4,10 +4,12 @@ import Swal from 'sweetalert2';
 import { SummaryCard } from '../../shared/components/summary-card/summary-card';
 import { CategoryProgress } from '../../shared/components/category-progress/category-progress';
 import { RecentTransactions } from '../../shared/components/recent-transactions/recent-transactions';
-import { CATEGORIES, CategoryExpense, CategoryExpenseTotal } from '../../shared/models';
+import { CategoryExpenseTotal } from '../../shared/models';
 import { BudgetService } from '../../shared/services/budget.service';
 import { ExpenseService } from '../../shared/services/expense.service';
+import { CategoryService } from '../../shared/services/category.service';
 import { ExpenseItemResponse } from '../../shared/models/expense/ExpenseResponse';
+import { CategoryResponseI } from '../../shared/models/category/CategoryResponse';
 
 @Component({
   selector: 'app-init-page',
@@ -21,10 +23,11 @@ import { ExpenseItemResponse } from '../../shared/models/expense/ExpenseResponse
 export class InitPage implements OnInit {
   private readonly budgetService = inject(BudgetService);
   private readonly expenseService = inject(ExpenseService);
+  private readonly categoryService = inject(CategoryService);
   public readonly formattedBudget = computed(() => `$${this.budgetService.monthlyBudget().toFixed(2)}`);
   public transactions = signal<ExpenseItemResponse[]>([]);
   public totalByCategory = signal<CategoryExpenseTotal[]>([]);
-  public categories = signal<CategoryExpense[]>(CATEGORIES)
+  public categories = signal<CategoryResponseI[]>([])
   public totalExpense = 0;
   public available = 0;
 
@@ -32,12 +35,15 @@ export class InitPage implements OnInit {
   ngOnInit() {
     forkJoin({
       totalByCategory: this.expenseService.getTotalByCategory(),
-      expenses: this.expenseService.getAll({ page: 1, limit: 255 })
+      expenses: this.expenseService.getAll({ page: 1, limit: 255 }),
+      categories: this.categoryService.getAll()
     }).subscribe({
-      next: ({ totalByCategory, expenses }) => {
+      next: ({ totalByCategory, expenses, categories }) => {
         this.totalByCategory.set(totalByCategory.data);
         this.totalExpense = this.totalByCategory().reduce((acum, categ) => acum + categ.total, 0);
         this.available = this.budgetService.monthlyBudget() - this.totalExpense;
+
+        this.categories.set(categories.data);
 
         this.transactions.set(
           expenses.data.map(i => ({ ...i, date: i.date.toString().split('T')[0] }))

@@ -3,7 +3,7 @@ import { Chart, ChartConfiguration } from 'chart.js/auto';
 import Swal from 'sweetalert2';
 import { ExpenseService } from '../../shared/services/expense.service';
 import { CategoryService } from '../../shared/services/category.service';
-import { CategoryExpenseTotal, Transaction } from '../../shared/models';
+import { CategoryExpenseTotal } from '../../shared/models';
 import { CategoryProgress } from '../../shared/components/category-progress/category-progress';
 import { forkJoin } from 'rxjs';
 import { ExpenseItemResponse } from '../../shared/models/expense/ExpenseResponse';
