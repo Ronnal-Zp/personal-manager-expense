@@ -1,6 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { BudgetService } from '../shared/services/budget.service';
+import { AuthService } from '../shared/services/auth.service';
 
 interface NavItem {
   id: 'inicio' | 'gastos' | 'agregar' | 'reportes';
@@ -17,6 +18,8 @@ interface NavItem {
 })
 export class Dashboard {
   protected readonly budgetService = inject(BudgetService);
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
   protected readonly sidebarOpen = signal(false);
   protected readonly activeSection = signal<NavItem['id']>('inicio');
   protected readonly descriptionSection = signal<NavItem['description']>('Tu actividad de agosto 2026');
@@ -68,5 +71,10 @@ export class Dashboard {
     if (Number.isFinite(value)) {
       this.budgetService.setMonthlyBudget(value);
     }
+  }
+
+  protected logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }
