@@ -1,12 +1,15 @@
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { forkJoin } from 'rxjs';
+import Swal from 'sweetalert2';
 import { SummaryCard } from '../../shared/components/summary-card/summary-card';
 import { CategoryProgress } from '../../shared/components/category-progress/category-progress';
 import { RecentTransactions } from '../../shared/components/recent-transactions/recent-transactions';
-import { Transaction } from '../../shared/models/transaction';
-import { CATEGORIES, CategoryEnum, CategoryExpense, CategoryExpenseTotal } from '../../shared/models';
+import { CategoryExpenseTotal } from '../../shared/models';
 import { BudgetService } from '../../shared/services/budget.service';
 import { ExpenseService } from '../../shared/services/expense.service';
-import Swal from 'sweetalert2';
+import { CategoryService } from '../../shared/services/category.service';
+import { ExpenseItemResponse } from '../../shared/models/expense/ExpenseResponse';
+import { CategoryResponseI } from '../../shared/models/category/CategoryResponse';
 
 @Component({
   selector: 'app-init-page',
@@ -20,28 +23,41 @@ import Swal from 'sweetalert2';
 export class InitPage implements OnInit {
   private readonly budgetService = inject(BudgetService);
   private readonly expenseService = inject(ExpenseService);
+  private readonly categoryService = inject(CategoryService);
   public readonly formattedBudget = computed(() => `$${this.budgetService.monthlyBudget().toFixed(2)}`);
-  public transactions = signal<Transaction[]>([]);
+  public transactions = signal<ExpenseItemResponse[]>([]);
   public totalByCategory = signal<CategoryExpenseTotal[]>([]);
-  public categories = signal<CategoryExpense[]>(CATEGORIES)
+  public categories = signal<CategoryResponseI[]>([])
   public totalExpense = 0;
   public available = 0;
 
 
-  async ngOnInit() {
-    try {
-        this.totalByCategory.set( await this.expenseService.getTotalByCategory() );
-        this.transactions.set( await this.expenseService.getAll() );
+  ngOnInit() {
+    forkJoin({
+      totalByCategory: this.expenseService.getTotalByCategory(),
+      expenses: this.expenseService.getAll({ page: 1, limit: 255 }),
+      categories: this.categoryService.getAll()
+    }).subscribe({
+      next: ({ totalByCategory, expenses, categories }) => {
+        this.totalByCategory.set(totalByCategory.data);
         this.totalExpense = this.totalByCategory().reduce((acum, categ) => acum + categ.total, 0);
         this.available = this.budgetService.monthlyBudget() - this.totalExpense;
-    } catch (error: any) {
-       Swal.fire({
-        title: '¡Ha ocurrido un error!',
-        text: error.message,
-        icon: 'error',
-        confirmButtonText: 'Aceptar'
-      });
-    }
+
+        this.categories.set(categories.data);
+
+        this.transactions.set(
+          expenses.data.map(i => ({ ...i, date: i.date.toString().split('T')[0] }))
+        );
+      },
+      error: (err) => {
+        Swal.fire({
+          title: '¡Ha ocurrido un error!',
+          text: err.message,
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        });
+      }
+    });
   }
 
   getCurrentExpensesByCategory(idCategory: number) {

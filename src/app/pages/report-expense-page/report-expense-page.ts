@@ -1,8 +1,13 @@
 import { AfterViewInit, Component, ElementRef, inject, OnDestroy, signal, viewChild } from '@angular/core';
 import { Chart, ChartConfiguration } from 'chart.js/auto';
+import Swal from 'sweetalert2';
 import { ExpenseService } from '../../shared/services/expense.service';
-import { CATEGORIES, CategoryExpense, CategoryExpenseTotal, Transaction } from '../../shared/models';
+import { CategoryService } from '../../shared/services/category.service';
+import { CategoryExpenseTotal } from '../../shared/models';
 import { CategoryProgress } from '../../shared/components/category-progress/category-progress';
+import { forkJoin } from 'rxjs';
+import { ExpenseItemResponse } from '../../shared/models/expense/ExpenseResponse';
+import { CategoryResponseI } from '../../shared/models/category/CategoryResponse';
 
 @Component({
   selector: 'app-report-expense-page',
@@ -15,27 +20,53 @@ import { CategoryProgress } from '../../shared/components/category-progress/cate
 })
 export class ReportExpensePage implements AfterViewInit, OnDestroy {
   private readonly expenseService = inject(ExpenseService);
+  private readonly categoryService = inject(CategoryService);
   private readonly chartCanvas = viewChild.required<ElementRef<HTMLCanvasElement>>('chartCanvas');
   private chart?: Chart;
   public totalByCategory = signal<CategoryExpenseTotal[]>([]);
-  public categories = signal<CategoryExpense[]>(CATEGORIES)
-  public transactions = signal<Transaction[]>([]);
+  public categories = signal<CategoryResponseI[]>([])
+  public transactions = signal<ExpenseItemResponse[]>([]);
 
-  async ngAfterViewInit() {
-    this.totalByCategory.set( await this.expenseService.getTotalByCategory() );
-    this.transactions.set( await this.expenseService.getAll() );
+  ngAfterViewInit() {
+    forkJoin({
+      totalByCategory: this.expenseService.getTotalByCategory(),
+      expenses: this.expenseService.getAll({ page: 1, limit: 255 }),
+      categories: this.categoryService.getAll(),
+    }).subscribe({
+      next: ({ totalByCategory, expenses, categories }) => {
+        this.totalByCategory.set(totalByCategory.data);
 
+        this.categories.set(categories.data);
+
+        this.transactions.set(
+          expenses.data.map(i => ({ ...i, date: i.date.toString().split('T')[0] }))
+        );
+
+        this.setupReport();
+      },
+      error: (err) => {
+        Swal.fire({
+          title: '¡Ha ocurrido un error!',
+          text: err.message,
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        });
+      }
+    });
+  }
+
+  setupReport() {
     const now = new Date();
     const year = now.getFullYear();
     const month = now.getMonth();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const labels = Array.from({ length: daysInMonth }, (_, i) => String(i + 1));
 
-    const datasets = CATEGORIES.map((category) => {
+    const datasets = this.categories().map((category) => {
       const dataByDay = new Array(daysInMonth).fill(0);
 
       this.transactions()
-        .filter((transaction) => transaction.categoryId == category.id)
+        .filter((transaction) => transaction.category.id == category.id)
         .forEach((transaction) => {
           const date = this.parseDate(transaction.date);
 
@@ -75,12 +106,13 @@ export class ReportExpensePage implements AfterViewInit, OnDestroy {
     this.chart?.destroy();
   }
 
-  private parseDate(value: string): Date {
-    const [day, month, year] = value.split('/').map(Number);
+  private parseDate(value: string | Date): Date {
+    if (value instanceof Date) return value;
+    const [year, month, day] = value.split('T')[0].split('-').map(Number);
     return new Date(year, month - 1, day);
   }
 
-  private resolveHexColor(colorClass: string): string {
+  private resolveHexColor(colorClass: string | null): string {
     const map: Record<string, string> = {
       'bg-red-400': '#f87171',
       'bg-blue-400': '#60a5fa',
@@ -89,7 +121,7 @@ export class ReportExpensePage implements AfterViewInit, OnDestroy {
       'bg-pink-400': '#f472b6',
       'bg-gray-400': '#9ca3af',
     };
-    return map[colorClass] ?? '#9ca3af';
+    return (colorClass && map[colorClass]) ?? '#9ca3af';
   }
 
   getCurrentExpensesByCategory(idCategory: number) {

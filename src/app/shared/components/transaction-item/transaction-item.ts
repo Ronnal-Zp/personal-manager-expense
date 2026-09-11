@@ -1,7 +1,6 @@
-import { Component, computed, effect, input } from '@angular/core';
-import { CATEGORIES } from '../../models/categoryExpense';
+import { Component, computed, input } from '@angular/core';
+import { CategoryResponse } from '../../models/expense/ExpenseResponse';
 
-type sumRestSign = '+' | '-';
 
 @Component({
   selector: 'app-transaction-item',
@@ -11,17 +10,13 @@ type sumRestSign = '+' | '-';
 })
 export class TransactionItem {
   description = input.required<string>();
-  categoryId = input.required<number>();
-  date = input.required<string>();
+  date = input.required<Date | string>();
   amount = input.required<number>();
-  sumRestSign = input<sumRestSign>('+');
-  colorClass = input<string>('bg-gray-500');
+  sumRestSign = input<string>('+');
   showDivider = input(false);
-
-  category = computed(() => CATEGORIES.find((category) => category.id == this.categoryId()));
-
-  categoryName = computed(() => this.category()?.name ?? this.categoryId());
-
-  categoryColorClass = computed(() => this.category()?.color ?? this.colorClass());
+  
+  category =  input.required<CategoryResponse>()
+  categoryName = computed(() => this.category()?.name);
+  categoryColorClass = computed(() => this.category().color);
 
 }

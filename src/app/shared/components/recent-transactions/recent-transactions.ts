@@ -1,6 +1,6 @@
 import { Component, effect, input } from '@angular/core';
 import { TransactionItem } from '../transaction-item/transaction-item';
-import { Transaction } from '../../models/transaction';
+import { ExpenseItemResponse } from '../../models/expense/ExpenseResponse';
 
 @Component({
   selector: 'app-recent-transactions',
@@ -9,7 +9,7 @@ import { Transaction } from '../../models/transaction';
   styleUrl: './recent-transactions.css',
 })
 export class RecentTransactions {
-  transactions = input.required<Transaction[]>();
+  transactions = input.required<ExpenseItemResponse[]>();
   emptyMessage = input('');
 
   constructor() {

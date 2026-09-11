@@ -13,11 +13,11 @@
   </div>
 
   <div class="flex flex-col gap-2">
-    <label for="description" class="text-xs font-bold uppercase tracking-wide text-gray-500">Descripción</label>
+    <label for="title" class="text-xs font-bold uppercase tracking-wide text-gray-500">Descripción</label>
     <input
-      id="description"
+      id="title"
       type="text"
-      formControlName="description"
+      formControlName="title"
       placeholder="Ej. Supermercado"
       class="rounded-2xl border border-gray-200 px-4 py-3 outline-none placeholder:text-gray-300"
     />
@@ -26,12 +26,12 @@
   <div class="flex flex-col gap-2">
     <span class="text-xs font-bold uppercase tracking-wide text-gray-500">Categoría</span>
     <div class="flex flex-wrap gap-3">
-      @for (category of categories; track category.id) {
+      @for (category of categories(); track category.id) {
         <button
           type="button"
           (click)="onCategorySelected(category)"
           class="font-semibold text-center px-4 py-2 text-sm rounded-3xl border"
-          [class]="formExpense.get('category')?.value === category.id
+          [class]="formExpense.get('category_id')?.value === category.id
             ? category.color + ' text-white border-transparent'
             : 'bg-white text-black border-gray-200'"
         >
@@ -70,7 +70,10 @@
   <button
     type="button"
     (click)="onGuardarGasto()"
-    class="bg-blue-600 text-white font-semibold rounded-2xl py-4 w-full"
+    [disabled]="formExpense.invalid"
+    [class]="formExpense.invalid
+      ? 'bg-gray-300 text-gray-500 cursor-not-allowed font-semibold rounded-2xl py-4 w-full'
+      : 'bg-blue-600 text-white font-semibold rounded-2xl py-4 w-full'"
   >
     Guardar gasto
   </button>
