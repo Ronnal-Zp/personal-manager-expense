@@ -32,16 +32,20 @@
           [routerLink]="item.path"
           (click)="selectSection(item.id)"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="h-5 w-5 shrink-0"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="item.icon" />
-          </svg>
+          @if (item.iconClass) {
+            <i class="flex h-5 w-5 shrink-0 items-center justify-center text-base" [class]="item.iconClass" aria-hidden="true"></i>
+          } @else {
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="h-5 w-5 shrink-0"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" [attr.d]="item.icon" />
+            </svg>
+          }
           {{ item.label }}
         </button>
       }

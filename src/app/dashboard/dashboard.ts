@@ -4,10 +4,13 @@ import { BudgetService } from '../shared/services/budget.service';
 import { AuthService } from '../shared/services/auth.service';
 
 interface NavItem {
-  id: 'inicio' | 'gastos' | 'agregar' | 'reportes';
+  id: 'inicio' | 'gastos' | 'agregar' | 'categorias' | 'reportes';
   path: string;
   label: string;
-  icon: string;
+  /** Path de un SVG inline. Se ignora si se define `iconClass`. */
+  icon?: string;
+  /** Clase de Font Awesome, tiene prioridad sobre `icon`. */
+  iconClass?: string;
   description: string;
 }
 
@@ -47,10 +50,17 @@ export class Dashboard {
       description: 'Crea una nueva transaccion'
     },
     {
+      id: 'categorias',
+      label: 'Categorías',
+      path: '/categorias',
+      iconClass: 'fa-solid fa-layer-group',
+      description: 'Administra tus categorías y límites de gasto'
+    },
+    {
       id: 'reportes',
       label: 'Reportes',
       path: '/reportes',
-      icon: 'M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 １-１.１２５-１．１２５V8．6２５ZM１６．５ 4．１２５c0-.6２１．５０４-１．１２５ １．１２５-１．１２５h２．２５C２０．４９６ 3 ２１ 3．５０４ ２１ 4．１２５v１５．７５c0 .6２１-.五百四一．１２５-１．１２５h-２．２５a₁．₁₂₅ ₁．₁₂₅ 0 0 ₁-₁．₁₂₅-₁．₁₂₅V4．₁₂₅Z',
+      iconClass: 'fa-solid fa-chart-column',
       description: 'Tendencias y distribución de gasto'
     },
   ];
