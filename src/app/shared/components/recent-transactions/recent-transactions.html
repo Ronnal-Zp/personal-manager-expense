@@ -4,7 +4,7 @@
     } @else {
         @for (transaction of transactions(); track transaction; let last = $last) {
             <app-transaction-item
-                [description]="transaction.description"
+                [description]="transaction.title"
                 [category]="transaction.category"
                 [date]="transaction.date"
                 [amount]="transaction.amount"

@@ -10,7 +10,7 @@ import { CategoryResponseI } from '../../shared/models/category/CategoryResponse
 import { PageQuery } from '../../shared/models/PageQuery';
 
 const ALL_FILTER_ID = 0;
-const PAGE_QUERY: PageQuery = { page: 1, limit: 255 };
+const PAGE_QUERY: PageQuery = { page: 1, limit: 10 };
 
 @Component({
   selector: 'app-expenses-list-page',

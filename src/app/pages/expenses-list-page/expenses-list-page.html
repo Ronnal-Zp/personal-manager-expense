@@ -9,6 +9,7 @@
         <app-filter-chip
             [label]="filter.name"
             [selected]="filter.id === selectedFilterId()"
+            [color]="filter.color"
             (filterSelect)="selectFilter(filter.id)"
         />
     }

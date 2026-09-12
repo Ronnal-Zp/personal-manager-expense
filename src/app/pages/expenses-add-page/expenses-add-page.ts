@@ -120,6 +120,7 @@ export class ExpensesAddPage implements OnInit {
         });
         this.formExpense.reset()
         this.formExpense.get('amount')?.setValue('0');
+        this.formExpense.get('sum_rest_sign')?.setValue('-');
         this.formExpense.get('date')?.setValue(this.toDisplayDate(this.today()));
       },
       error: (err: any) => {
