@@ -32,4 +32,8 @@ export class ExpenseService {
         return this.http.post<ExpenseCreateResponse>(`${this.BASE_URL}/expense`, expense);
     }
 
+    deleteAll() {
+        return this.http.delete<void>(`${this.BASE_URL}/expense/all`);
+    }
+
 }

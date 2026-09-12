@@ -87,7 +87,6 @@ export class ReportExpensePage implements AfterViewInit, OnDestroy {
       };
     });
 
-    console.log({ labels, datasets })
     const config: ChartConfiguration<'line'> = {
       type: 'line',
       data: { labels, datasets },
@@ -101,6 +100,7 @@ export class ReportExpensePage implements AfterViewInit, OnDestroy {
       },
     };
 
+    this.chart?.destroy();
     this.chart = new Chart(this.chartCanvas().nativeElement, config);
   }
 

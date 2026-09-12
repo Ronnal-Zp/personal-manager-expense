@@ -1,7 +1,9 @@
 import { Component, inject, signal } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
+import Swal from 'sweetalert2';
 import { BudgetService } from '../shared/services/budget.service';
 import { AuthService } from '../shared/services/auth.service';
+import { ExpenseService } from '../shared/services/expense.service';
 
 interface NavItem {
   id: 'inicio' | 'gastos' | 'agregar' | 'categorias' | 'reportes';
@@ -21,6 +23,7 @@ interface NavItem {
 })
 export class Dashboard {
   protected readonly budgetService = inject(BudgetService);
+  private readonly expenseService = inject(ExpenseService);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   protected readonly sidebarOpen = signal(false);
@@ -86,5 +89,43 @@ export class Dashboard {
   protected logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
+  }
+
+  protected async onDeleteAll(): Promise<void> {
+    const confirmation = await Swal.fire({
+      title: '¿Eliminar todos los gastos?',
+      text: 'Esta operación no se puede deshacer.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Eliminar',
+      cancelButtonText: 'Cancelar',
+    });
+
+    if (!confirmation.isConfirmed) {
+      return;
+    }
+
+    
+
+    this.expenseService.deleteAll().subscribe({
+      next: () => {
+        Swal.fire({
+          title: '¡Operación exitosa!',
+          text: 'Todos los gastos han sido eliminados correctamente.',
+          icon: 'success',
+          confirmButtonText: 'Aceptar',
+        }).then(() => {
+          window.location.reload();
+        });
+      },
+      error: (err) => {
+        Swal.fire({
+          title: '¡Ha ocurrido un error!',
+          text: err.message,
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        });
+      }
+    });
   }
 }
