@@ -51,6 +51,8 @@ export interface CategoryPalette {
     soft:  string;
     /** Clase de texto, se persiste en `text_color`. */
     text:  string;
+    /** Equivalente hexadecimal del tono `solid`, para usos fuera de Tailwind (ej. Chart.js). */
+    hex: string;
 }
 
 /**
@@ -58,14 +60,14 @@ export interface CategoryPalette {
  * compilar el proyecto.
  */
 export const CATEGORY_PALETTES: readonly CategoryPalette[] = [
-    { id: 'blue', solid: 'bg-blue-400', soft: 'bg-blue-100', text: 'text-blue-800' },
-    { id: 'orange', solid: 'bg-orange-400', soft: 'bg-orange-100', text: 'text-orange-800' },
-    { id: 'emerald', solid: 'bg-emerald-400', soft: 'bg-emerald-100', text: 'text-emerald-800' },
-    { id: 'pink', solid: 'bg-pink-400', soft: 'bg-pink-100', text: 'text-pink-800' },
-    { id: 'violet', solid: 'bg-violet-400', soft: 'bg-violet-100', text: 'text-violet-800' },
-    { id: 'cyan', solid: 'bg-cyan-400', soft: 'bg-cyan-100', text: 'text-cyan-800' },
-    { id: 'amber', solid: 'bg-amber-400', soft: 'bg-amber-100', text: 'text-amber-800' },
-    { id: 'slate', solid: 'bg-slate-400', soft: 'bg-slate-100', text: 'text-slate-800' },
+    { id: 'blue', solid: 'bg-blue-400', soft: 'bg-blue-100', text: 'text-blue-800', hex: '#60a5fa' },
+    { id: 'orange', solid: 'bg-orange-400', soft: 'bg-orange-100', text: 'text-orange-800', hex: '#fb923c' },
+    { id: 'emerald', solid: 'bg-emerald-400', soft: 'bg-emerald-100', text: 'text-emerald-800', hex: '#34d399' },
+    { id: 'pink', solid: 'bg-pink-400', soft: 'bg-pink-100', text: 'text-pink-800', hex: '#f472b6' },
+    { id: 'violet', solid: 'bg-violet-400', soft: 'bg-violet-100', text: 'text-violet-800', hex: '#a78bfa' },
+    { id: 'cyan', solid: 'bg-cyan-400', soft: 'bg-cyan-100', text: 'text-cyan-800', hex: '#22d3ee' },
+    { id: 'amber', solid: 'bg-amber-400', soft: 'bg-amber-100', text: 'text-amber-800', hex: '#fbbf24' },
+    { id: 'slate', solid: 'bg-slate-400', soft: 'bg-slate-100', text: 'text-slate-800', hex: '#94a3b8' },
 ];
 
 export const DEFAULT_PALETTE = CATEGORY_PALETTES[0];

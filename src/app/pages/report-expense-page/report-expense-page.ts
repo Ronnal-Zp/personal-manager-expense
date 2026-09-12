@@ -8,6 +8,7 @@ import { CategoryProgress } from '../../shared/components/category-progress/cate
 import { forkJoin } from 'rxjs';
 import { ExpenseItemResponse } from '../../shared/models/expense/ExpenseResponse';
 import { CategoryResponseI } from '../../shared/models/category/CategoryResponse';
+import { paletteOf } from '../../shared/constants/category-style';
 
 @Component({
   selector: 'app-report-expense-page',
@@ -86,6 +87,7 @@ export class ReportExpensePage implements AfterViewInit, OnDestroy {
       };
     });
 
+    console.log({ labels, datasets })
     const config: ChartConfiguration<'line'> = {
       type: 'line',
       data: { labels, datasets },
@@ -113,15 +115,7 @@ export class ReportExpensePage implements AfterViewInit, OnDestroy {
   }
 
   private resolveHexColor(colorClass: string | null): string {
-    const map: Record<string, string> = {
-      'bg-red-400': '#f87171',
-      'bg-blue-400': '#60a5fa',
-      'bg-emerald-400': '#34d399',
-      'bg-purple-400': '#c084fc',
-      'bg-pink-400': '#f472b6',
-      'bg-gray-400': '#9ca3af',
-    };
-    return (colorClass && map[colorClass]) ?? '#9ca3af';
+    return paletteOf(colorClass).hex;
   }
 
   getCurrentExpensesByCategory(idCategory: number) {
